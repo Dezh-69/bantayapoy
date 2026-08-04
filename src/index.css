@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Liberation+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Brand / Primary */
+  --color-primary: #B91C1C;
+  --color-primary-dark: #AF101A;
+  --color-accent: #D32F2F;
+  --color-accent-light: #F87171;
+
+  /* Surfaces */
+  --color-surface: #FCF9F8;
+  --color-surface-alt: #F6F3F2;
+  --color-surface-warm: #FFF5F2;
+  --color-surface-card: #FFFFFF;
+  --color-surface-sidebar: #FFF5F2;
+  --color-surface-cream: #EBE7E7;
+
+  /* Status / Teal */
+  --color-teal: #005F7B;
+  --color-teal-light: #00799C;
+
+  /* Text */
+  --color-text: #1C1B1B;
+  --color-text-heading: #18181B;
+  --color-text-body: #5B403D;
+  --color-text-muted: #52525B;
+  --color-text-subtle: #71717A;
+  --color-text-faint: #A1A1AA;
+  --color-text-warm: #857371;
+
+  /* Borders */
+  --color-border: #E5E2E1;
+  --color-border-light: #E4E4E7;
+  --color-border-warm: #F0EDEC;
+
+  /* Tier Alerts */
+  --color-tier1-bg: #FEF3C7;
+  --color-tier1-text: #92400E;
+  --color-tier1-border: #F59E0B;
+
+  --color-tier2-bg: #FEE2E2;
+  --color-tier2-text: #7F1D1D;
+  --color-tier2-border: #DC2626;
+
+  /* Success / Active */
+  --color-success: #10B981;
+  --color-success-dark: #047857;
+
+  /* Misc */
+  --color-purple: #6B46C1;
+  --color-amber: #D97706;
+  --color-amber-light: #F59E0B;
+
+  /* Legacy aliases for any remaining usage */
+  --color-bg-dark: #0F1E19;
+  --color-mint: #7EE8B0;
+  --color-bg-light: #FCF9F8;
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-text font-sans antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Scrollbar styling */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
