@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import type { Device } from '../lib/supabase';
 import { Thermometer, Wind, MessageSquare, CheckCircle2, ShieldAlert, HelpCircle, AlertTriangle, Save } from 'lucide-react';
+import { AlertSettingsSkeleton } from '../components/SkeletonLoaders';
 
 export const ResidentAlertSettings = () => {
   const { profile } = useAuth();
@@ -100,7 +101,7 @@ export const ResidentAlertSettings = () => {
     setContactNumber(origContact);
   };
 
-  if (loading) return <div className="p-8 font-bold">Loading settings...</div>;
+  if (loading) return <AlertSettingsSkeleton />;
   if (!device) return <div className="p-8 font-bold text-[#DC2626]">No device registered to your account.</div>;
 
   // Threshold safety warnings

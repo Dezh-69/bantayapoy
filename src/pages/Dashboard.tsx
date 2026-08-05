@@ -10,6 +10,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { DashboardSkeleton } from '../components/SkeletonLoaders';
 
 // Helper to determine device status based on alerts and last_seen_at
 const getDeviceStatus = (device: Device, activeAlerts: AlertEvent[]): 'online' | 'alert' | 'offline' => {
@@ -118,11 +119,7 @@ export const Dashboard = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#B91C1C]" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import type { Device, AlertEvent } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { ResponderDashboardSkeleton } from '../components/SkeletonLoaders';
 import {
   AlertTriangle,
   Wifi,
@@ -129,11 +130,7 @@ export const ResponderDashboard = () => {
   const feedAlerts = activeAlerts.slice(0, 5);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#B91C1C]" />
-      </div>
-    );
+    return <ResponderDashboardSkeleton />;
   }
 
   return (

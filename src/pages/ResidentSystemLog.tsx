@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { SystemLogSkeleton } from '../components/SkeletonLoaders';
 import type { AlertEvent } from '../lib/supabase';
 import { FileText, AlertTriangle, CheckCircle2, Filter, RefreshCw, Flame, ThermometerSun } from 'lucide-react';
 
@@ -56,7 +57,7 @@ export const ResidentSystemLog = () => {
   const activeCount = alerts.filter(a => !a.resolved_at).length;
   const resolvedCount = alerts.filter(a => !!a.resolved_at).length;
 
-  if (loading && alerts.length === 0) return <div className="p-8 font-bold">Loading system log...</div>;
+  if (loading && alerts.length === 0) return <SystemLogSkeleton />;
   if (!profile?.device_id) return <div className="p-8 font-bold text-[#DC2626]">No device registered to your account.</div>;
 
   return (

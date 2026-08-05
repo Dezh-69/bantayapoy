@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { ProfileSkeleton } from '../components/SkeletonLoaders';
 import { Settings, Save, CheckCircle2, User, Phone, Shield, Calendar, AlertTriangle } from 'lucide-react';
 
 export const ResponderSettings = () => {
@@ -57,7 +58,7 @@ export const ResponderSettings = () => {
     }
   };
 
-  if (!profile) return <div className="p-8 font-bold">Loading...</div>;
+  if (!profile) return <ProfileSkeleton />;
 
   return (
     <div className="flex flex-col gap-8 pb-12">

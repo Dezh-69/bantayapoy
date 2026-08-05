@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Save, Clock, ShieldCheck, Activity } from 'lucide-react';
+import { Save, Clock, ShieldCheck, Activity, UserCheck, BellRing, Settings as SettingsIcon } from 'lucide-react';
+import { SettingsFormSkeleton } from '../components/SkeletonLoaders';
 
 export const Settings = () => {
   const [settings, setSettings] = useState<Record<string, string>>({});
@@ -68,9 +69,7 @@ export const Settings = () => {
         </div>
         
         {loading ? (
-          <div className="flex justify-center p-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-2 border-border border-t-primary"></div>
-          </div>
+          <SettingsFormSkeleton />
         ) : (
           <div className="p-8 space-y-8">
             

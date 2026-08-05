@@ -16,6 +16,7 @@ import {
   ChevronRight,
   ChevronDown,
 } from 'lucide-react';
+import { TableBodySkeleton } from '../components/SkeletonLoaders';
 
 type DeviceWithStatus = Device & {
   status: 'operational' | 'critical' | 'maintenance' | 'offline';
@@ -262,11 +263,7 @@ export const Alerts = () => {
                 </thead>
                 <tbody>
                   {loading ? (
-                    <tr>
-                      <td colSpan={5} className="text-center py-16">
-                        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#E5E2E1] border-t-[#DC2626] mx-auto"></div>
-                      </td>
-                    </tr>
+                    <TableBodySkeleton cols={5} rows={5} />
                   ) : paginatedDevices.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="text-center py-16 text-[#A1A1AA]">

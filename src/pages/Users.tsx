@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import type { Profile, Device } from '../lib/supabase';
-import { Users as UsersIcon, Search, Shield, User, UserPlus, Phone, X, CheckCircle2 } from 'lucide-react';
+import type { Profile, Role, Device } from '../lib/supabase';
+import { Users as UsersIcon, Search, Shield, User, UserPlus, Phone, X, CheckCircle2, Filter, XCircle } from 'lucide-react';
+import { TableBodySkeleton } from '../components/SkeletonLoaders';
 
 export const Users = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
@@ -151,8 +153,12 @@ export const Users = () => {
       {/* Users Table */}
       <div className="bg-surface-card border border-border rounded-lg overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
         {loading ? (
-          <div className="flex justify-center p-12">
-            <div className="animate-spin rounded-full h-10 w-10 border-2 border-border border-t-primary"></div>
+          <div className="overflow-x-auto p-4">
+             <table className="w-full text-left border-collapse">
+               <tbody className="divide-y divide-border">
+                  <TableBodySkeleton cols={5} rows={5} />
+               </tbody>
+             </table>
           </div>
         ) : (
           <div className="overflow-x-auto">

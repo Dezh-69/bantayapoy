@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import type { Device } from '../lib/supabase';
 import { Cpu, ChevronRight, Info, Loader2 } from 'lucide-react';
+import { CardListSkeleton } from '../components/SkeletonLoaders';
 
 const timeAgo = (dateStr: string) => {
   const seconds = Math.floor((new Date().getTime() - new Date(dateStr).getTime()) / 1000);
@@ -221,8 +222,8 @@ export const Devices = () => {
 
             <div className="flex flex-col gap-4">
               {loading ? (
-                <div className="flex justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#E5E2E1] border-t-[#AF101A]"></div>
+                <div className="py-8">
+                  <CardListSkeleton count={4} />
                 </div>
               ) : devices.length === 0 ? (
                 <div className="bg-white rounded py-8 px-4 text-center">

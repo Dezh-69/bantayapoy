@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import type { Profile } from '../lib/supabase';
+import { CardListSkeleton } from '../components/SkeletonLoaders';
 import { Users, Search, Phone, Shield, User, CheckCircle2, XCircle } from 'lucide-react';
 
 export const ResponderTeam = () => {
@@ -57,8 +58,8 @@ export const ResponderTeam = () => {
       {/* Team Table */}
       <div className="bg-surface-card border border-border rounded-lg overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
         {loading ? (
-          <div className="flex justify-center p-12">
-            <div className="animate-spin rounded-full h-10 w-10 border-2 border-border border-t-primary" />
+          <div className="p-6">
+            <CardListSkeleton count={4} />
           </div>
         ) : (
           <div className="overflow-x-auto">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { DeviceInfoSkeleton } from '../components/SkeletonLoaders';
 import type { Device, SensorReading } from '../lib/supabase';
 import { MapPin, Thermometer, Wind, Clock, Wifi, WifiOff, CheckCircle2, XCircle, RefreshCw } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
@@ -52,7 +53,7 @@ export const ResidentDeviceInfo = () => {
     setRefreshing(false);
   };
 
-  if (loading) return <div className="p-8 font-bold">Loading device info...</div>;
+  if (loading) return <DeviceInfoSkeleton />;
   if (!device) return <div className="p-8 font-bold text-[#DC2626]">No device registered to your account.</div>;
 
   const isOnline = device.last_seen_at && (Date.now() - new Date(device.last_seen_at).getTime() < 5 * 60 * 1000);

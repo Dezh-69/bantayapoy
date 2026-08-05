@@ -14,18 +14,22 @@ export const Login = () => {
   const [lockoutTimer, setLockoutTimer] = useState(0);
   const [rememberMe, setRememberMe] = useState(false);
   const [scale, setScale] = useState(1);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     const updateScale = () => {
-      const padding = 48; // 24px padding on each side
-      const targetWidth = 1152;
-      const targetHeight = 726;
-      
-      const scaleX = (window.innerWidth - padding) / targetWidth;
-      const scaleY = (window.innerHeight - padding) / targetHeight;
-      
-      // Let it scale down (or up) proportionally to fit exactly in the screen
-      setScale(Math.min(scaleX, scaleY));
+      const lg = window.innerWidth >= 1024;
+      setIsDesktop(lg);
+      if (lg) {
+        const padding = 48;
+        const targetWidth = 1152;
+        const targetHeight = 726;
+        const scaleX = (window.innerWidth - padding) / targetWidth;
+        const scaleY = (window.innerHeight - padding) / targetHeight;
+        setScale(Math.min(scaleX, scaleY, 1)); // cap at 1 so it never scales UP
+      } else {
+        setScale(1);
+      }
     };
 
     updateScale();
@@ -98,18 +102,26 @@ export const Login = () => {
 
   return (
     <div
-      className="h-screen w-full flex items-center justify-center px-6 overflow-hidden"
+      className={`w-full flex items-center justify-center ${isDesktop ? 'h-screen overflow-hidden' : 'min-h-screen overflow-y-auto p-4'}`}
       style={{ fontFamily: "'Inter', sans-serif", background: '#FCF9F8' }}
     >
-      {/* Main Card — 12-col grid, 7 left + 5 right */}
+      {/* Main Card */}
       <div 
-        className="w-[1152px] h-[726px] grid grid-cols-12 bg-white rounded-[12px] shadow-[0_24px_48px_rgba(0,0,0,0.08)] overflow-hidden shrink-0 origin-center"
-        style={{ transform: `scale(${scale})` }}
+        className={`bg-white rounded-[12px] shadow-[0_24px_48px_rgba(0,0,0,0.08)] overflow-hidden shrink-0 ${
+          isDesktop
+            ? 'w-[1152px] h-[726px] grid grid-cols-12 origin-center'
+            : 'w-full max-w-[1152px] grid grid-cols-1'
+        }`}
+        style={isDesktop ? { transform: `scale(${scale})` } : undefined}
       >
 
-        {/* ──────── LEFT: Branding / Identity Side (7 cols) ──────── */}
+        {/* ──────── LEFT: Branding / Identity Side ──────── */}
         <div
-          className="col-span-7 relative flex-col justify-between p-12 overflow-hidden flex"
+          className={`relative flex flex-col overflow-hidden ${
+            isDesktop
+              ? 'col-span-7 justify-between p-12'
+              : 'col-span-1 justify-center p-8 min-h-[220px]'
+          }`}
           style={{ background: '#4D2120' }}
         >
           {/* Background image at 40% opacity */}
@@ -149,9 +161,11 @@ export const Login = () => {
           <div></div>
         </div>
 
-        {/* ──────── RIGHT: Login Form Side (5 cols) ──────── */}
+        {/* ──────── RIGHT: Login Form Side ──────── */}
         <div
-          className="col-span-5 flex flex-col justify-center p-12 overflow-y-auto scrollbar-hide"
+          className={`flex flex-col justify-center overflow-y-auto scrollbar-hide ${
+            isDesktop ? 'col-span-5 p-12' : 'col-span-1 p-8'
+          }`}
           style={{ background: '#FFF8F7' }}
         >
           {/* Header */}

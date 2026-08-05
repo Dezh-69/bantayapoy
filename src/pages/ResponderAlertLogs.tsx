@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import type { AlertEvent, Device } from '../lib/supabase';
+import { TableBodySkeleton } from '../components/SkeletonLoaders';
 import {
   Download,
   Eye,
@@ -245,11 +246,7 @@ export const ResponderAlertLogs = () => {
             </thead>
             <tbody>
               {loading ? (
-                <tr>
-                  <td colSpan={5} className="text-center py-16">
-                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#E5E2E1] border-t-[#DC2626] mx-auto"></div>
-                  </td>
-                </tr>
+                <TableBodySkeleton cols={5} rows={5} />
               ) : paginatedLogs.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="text-center py-16 text-[#A1A1AA] text-sm">No records found.</td>

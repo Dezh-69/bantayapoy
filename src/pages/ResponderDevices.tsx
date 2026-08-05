@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import type { Device, SensorReading } from '../lib/supabase';
 import { Cpu, Search, Wifi, WifiOff, MapPin, Thermometer, Wind, ChevronDown, ChevronUp, Clock } from 'lucide-react';
+import { CardListSkeleton } from '../components/SkeletonLoaders';
 
 export const ResponderDevices = () => {
   const [devices, setDevices] = useState<Device[]>([]);
@@ -41,7 +42,7 @@ export const ResponderDevices = () => {
       .eq('device_id', deviceId)
       .order('recorded_at', { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
     setExpandedReading(data);
     setLoadingReading(false);
@@ -102,8 +103,8 @@ export const ResponderDevices = () => {
       {/* Device List */}
       <div className="flex flex-col gap-3">
         {loading ? (
-          <div className="flex justify-center p-12">
-            <div className="animate-spin rounded-full h-10 w-10 border-2 border-border border-t-primary" />
+          <div className="p-6 bg-surface-card border border-border rounded-lg">
+            <CardListSkeleton count={4} />
           </div>
         ) : filtered.length === 0 ? (
           <div className="bg-surface-card border border-border rounded-lg p-8 text-center">

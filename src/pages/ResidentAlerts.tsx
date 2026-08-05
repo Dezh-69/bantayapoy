@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Filter } from 'lucide-react';
+import { TableBodySkeleton } from '../components/SkeletonLoaders';
 
 type ResidentAlertEvent = {
   id: string;
@@ -143,11 +144,7 @@ export const ResidentAlerts = () => {
             </thead>
             <tbody>
               {loading ? (
-                <tr>
-                  <td colSpan={4} className="text-center py-12">
-                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-[#E4E4E7] border-t-[#B91C1C] mx-auto"></div>
-                  </td>
-                </tr>
+                <TableBodySkeleton cols={4} rows={3} />
               ) : !profile?.device_id ? (
                 <tr>
                   <td colSpan={4} className="text-center py-12">

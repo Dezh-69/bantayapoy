@@ -26,20 +26,20 @@ export const ResponderLayout: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-surface font-sans flex flex-col">
+    <div className="min-h-screen bg-surface font-sans flex flex-col overflow-x-hidden">
       
       {/* ─── Top Navigation Bar ─── */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#B91C1C] flex items-center justify-between px-8 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#B91C1C] flex items-center justify-between px-3 md:px-8 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
         {/* Brand */}
-        <div className="flex items-center gap-0">
-          <span className="text-white font-bold text-[32px] leading-7 tracking-[-0.03em]">
+        <div className="flex items-center gap-0 min-w-0 shrink-0">
+          <span className="text-white font-bold text-xl sm:text-2xl md:text-[32px] leading-7 tracking-[-0.03em] whitespace-nowrap">
             AgapSense{' '}
           </span>
           <span className="hidden md:inline-block w-px h-4 bg-white/50 mx-4"></span>
         </div>
 
         {/* Right Section */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 md:gap-6">
           {/* Search */}
           <div className="hidden md:block relative">
             <input
@@ -51,7 +51,7 @@ export const ResponderLayout: React.FC = () => {
           </div>
 
           {/* Notification Bell */}
-          <button className="relative p-2">
+          <button className="relative p-2 shrink-0">
             <Bell className="w-5 h-5 text-white" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-primary"></span>
           </button>
@@ -69,7 +69,7 @@ export const ResponderLayout: React.FC = () => {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-1 text-white"
+            className="md:hidden p-1 text-white shrink-0"
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -83,13 +83,13 @@ export const ResponderLayout: React.FC = () => {
         <aside className={`
           fixed md:sticky top-[69px] left-0 bottom-0 z-40
           w-64 bg-surface-warm border-r border-border-light
-          flex flex-col justify-between overflow-y-auto
+          flex flex-col justify-between h-[calc(100vh-69px)]
           transform transition-transform duration-300 ease-in-out
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0
         `}>
-          <div className="flex flex-col flex-1 pt-6">
+          <div className="flex flex-col flex-1 pt-6 overflow-hidden">
             {/* Sidebar Heading */}
-            <div className="px-6 pb-0">
+            <div className="px-6 pb-0 shrink-0">
               <div className="flex items-center gap-2 mb-1">
                 <svg width="20" height="26" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 0C12 0 4 8 4 16C4 20.4183 7.58172 24 12 24C16.4183 24 20 20.4183 20 16C20 8 12 0 12 0Z" fill="#D32F2F"/>
@@ -107,7 +107,7 @@ export const ResponderLayout: React.FC = () => {
             </div>
 
             {/* Main Nav */}
-            <nav className="flex-1 px-3 mt-8 space-y-1">
+            <nav className="flex-1 px-3 mt-8 space-y-1 overflow-y-auto">
               {mainNavItems.map((item) => (
                 <NavLink
                   key={item.name}
@@ -129,7 +129,7 @@ export const ResponderLayout: React.FC = () => {
             </nav>
 
             {/* Secondary Nav */}
-            <div className="px-3 pt-6 pb-6 border-t border-border-light mt-auto">
+            <div className="px-3 pt-6 pb-6 border-t border-border-light mt-auto shrink-0">
               {secondaryNavItems.map((item) =>
                 item.path === '#logout' ? (
                   <button

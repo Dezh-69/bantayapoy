@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import { ResidentHomeSkeleton } from '../components/SkeletonLoaders';
 
 // Icons
 const markerIcon = new L.Icon({
@@ -92,7 +93,7 @@ export const ResidentHome = () => {
     try {
       const [deviceRes, readingRes, alertsRes, historyRes] = await Promise.all([
         supabase.from('devices').select('*').eq('id', deviceId).single(),
-        supabase.from('sensor_readings').select('*').eq('device_id', deviceId).order('recorded_at', { ascending: false }).limit(1).single(),
+        supabase.from('sensor_readings').select('*').eq('device_id', deviceId).order('recorded_at', { ascending: false }).limit(1).maybeSingle(),
         supabase.from('alert_events').select('*').eq('device_id', deviceId).order('triggered_at', { ascending: false }).limit(10),
         supabase.from('sensor_readings').select('*').eq('device_id', deviceId).order('recorded_at', { ascending: false }).limit(24)
       ]);
@@ -109,12 +110,13 @@ export const ResidentHome = () => {
 
   useEffect(() => {
     if (profile?.device_id) {
-      setLoading(true);
+      // Only set loading true if we haven't loaded a device yet
+      if (!device) setLoading(true);
       fetchData(profile.device_id).finally(() => setLoading(false));
     } else if (profile) {
       setLoading(false);
     }
-  }, [profile, fetchData]);
+  }, [profile?.device_id, fetchData]);
 
   // Auto-refresh every 30 seconds
   useEffect(() => {
@@ -157,7 +159,7 @@ export const ResidentHome = () => {
     }, 2500);
   };
 
-  if (loading) return <div className="p-8 font-bold">Loading dashboard...</div>;
+  if (loading) return <ResidentHomeSkeleton />;
   if (!device) return <div className="p-8 font-bold text-red-600">No device registered to your account.</div>;
 
   const isOnline = device.last_seen_at && (Date.now() - new Date(device.last_seen_at).getTime() < 5 * 60 * 1000);

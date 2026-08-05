@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Settings, Save, CheckCircle2, User, Phone, Shield, Calendar, AlertTriangle, Cpu } from 'lucide-react';
+import { ProfileSkeleton } from '../components/SkeletonLoaders';
 
 export const ResidentAccount = () => {
   const { profile } = useAuth();
@@ -67,7 +68,7 @@ export const ResidentAccount = () => {
     }
   };
 
-  if (!profile) return <div className="p-8 font-bold">Loading...</div>;
+  if (!profile) return <ProfileSkeleton />;
 
   return (
     <div className="flex flex-col gap-8 pb-12">

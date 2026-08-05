@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { Download, ChevronDown, ChevronLeft, ChevronRight, AlertTriangle, Zap, History, Filter } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { Link } from 'react-router-dom';
+import { Download, ChevronDown, ChevronLeft, ChevronRight, AlertTriangle, Zap, History, Filter, FileText, Info, CheckCircle2, ShieldAlert, Cpu } from 'lucide-react';
+import { TableBodySkeleton } from '../components/SkeletonLoaders';
 
 type LogEvent = {
   id: string;
@@ -236,11 +239,7 @@ export const Logs = () => {
             </thead>
             <tbody>
               {loading ? (
-                <tr>
-                  <td colSpan={5} className="text-center py-16">
-                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#E5E2E1] border-t-[#DC2626] mx-auto"></div>
-                  </td>
-                </tr>
+                <TableBodySkeleton cols={5} rows={5} />
               ) : logs.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="text-center py-16 text-[#A1A1AA]">

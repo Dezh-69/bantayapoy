@@ -22,27 +22,27 @@ export const ResidentLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F4F4F5] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F4F4F5] flex flex-col font-sans overflow-x-hidden">
       {/* Top Header */}
-      <header className="bg-[#B91C1C] h-16 shadow-sm flex items-center justify-between px-4 lg:px-8 relative z-20">
-        <div className="flex items-center gap-4">
+      <header className="bg-[#B91C1C] h-16 shadow-sm flex items-center justify-between px-3 lg:px-8 relative z-20 w-full min-w-0">
+        <div className="flex items-center gap-2 lg:gap-4 min-w-0 shrink-0">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 text-white/80 hover:text-white rounded-md lg:hidden"
+            className="p-2 text-white/80 hover:text-white rounded-md lg:hidden shrink-0"
           >
-            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+            {isSidebarOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
           
-          <div className="flex items-center gap-1">
-            <span className="text-white text-[32px] font-bold tracking-tight" style={{ letterSpacing: '-0.03em' }}>AgapSense</span>
+          <div className="flex items-center gap-1 min-w-0">
+            <span className="text-white text-xl sm:text-2xl lg:text-[32px] font-bold tracking-tight whitespace-nowrap" style={{ letterSpacing: '-0.03em' }}>AgapSense</span>
           </div>
         </div>
 
-        {/* Search & Profile */}
-        <div className="flex items-center gap-6">
-          <div className="flex items-center text-white text-xs font-bold tracking-[0.1em] uppercase">
-            <BellRing size={16} className="mr-3" />
-            <span>OWNER : {profile?.full_name?.split(' ')[0] || 'USER'}</span>
+        {/* Profile */}
+        <div className="flex items-center gap-2 lg:gap-6 min-w-0 shrink-0">
+          <div className="flex items-center text-white text-[10px] sm:text-xs font-bold tracking-[0.1em] uppercase min-w-0">
+            <BellRing size={14} className="mr-1.5 sm:mr-3 shrink-0" />
+            <span className="truncate max-w-[80px] sm:max-w-[140px] lg:max-w-none">OWNER : {profile?.full_name?.split(' ')[0] || 'USER'}</span>
           </div>
         </div>
       </header>
@@ -58,12 +58,12 @@ export const ResidentLayout = () => {
 
         {/* Sidebar Navigation */}
         <aside className={`
-          absolute lg:static inset-y-0 left-0 z-30 w-64 bg-[#FCF9F8] border-r border-[#E5E2E1] flex flex-col
+          absolute lg:static inset-y-0 left-0 z-30 w-64 bg-[#FCF9F8] border-r border-[#E5E2E1] flex flex-col h-[calc(100vh-64px)]
           transform transition-transform duration-300 ease-in-out
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}>
           {/* Logo/Brand Area */}
-          <div className="px-6 py-8">
+          <div className="px-6 py-8 shrink-0">
             <div className="flex items-center gap-2 mb-1">
               <svg width="20" height="26" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 0C12 0 4 8 4 16C4 20.4183 7.58172 24 12 24C16.4183 24 20 20.4183 20 16C20 8 12 0 12 0Z" fill="#D32F2F"/>
@@ -79,7 +79,7 @@ export const ResidentLayout = () => {
           </div>
 
           {/* Main Navigation */}
-          <nav className="flex-1 px-4 space-y-1">
+          <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -101,7 +101,7 @@ export const ResidentLayout = () => {
           </nav>
 
           {/* Secondary Navigation */}
-          <div className="p-4 border-t border-[#E4E4E7]">
+          <div className="p-4 border-t border-[#E4E4E7] shrink-0 mt-auto">
             <NavLink
               to="/account"
               className="flex items-center gap-3 px-3 py-2 rounded-md text-[#52525B] hover:bg-[#F4F4F5] transition-colors text-sm font-medium mb-1"
