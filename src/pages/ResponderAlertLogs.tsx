@@ -323,7 +323,12 @@ export const ResponderAlertLogs = () => {
       {/* ─── Footer Summary Cards ─── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Unresolved Alarms */}
-        <div className="bg-[#F6F3F2] rounded-lg p-6 flex items-center gap-5">
+        <div className="bg-[#F6F3F2] rounded-lg p-6 flex items-center gap-5 relative overflow-visible group hover:bg-[#F2EDEC] transition-colors cursor-help">
+          {/* Tooltip */}
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-[#1C1B1B] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+            Active alerts that have not been resolved yet
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#1C1B1B]"></div>
+          </div>
           <div className="w-12 h-12 bg-[#FEE2E2] rounded-lg flex items-center justify-center shrink-0">
             <AlertTriangle className="w-6 h-6 text-[#DC2626]" />
           </div>
@@ -338,7 +343,12 @@ export const ResponderAlertLogs = () => {
         </div>
 
         {/* Network Integrity */}
-        <div className="bg-[#F6F3F2] rounded-lg p-6 flex items-center gap-5">
+        <div className="bg-[#F6F3F2] rounded-lg p-6 flex items-center gap-5 relative overflow-visible group hover:bg-[#F2EDEC] transition-colors cursor-help">
+          {/* Tooltip */}
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-[#1C1B1B] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+            Percentage of devices currently online and reporting
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#1C1B1B]"></div>
+          </div>
           <div className="w-12 h-12 bg-[#ECFDF5] rounded-lg flex items-center justify-center shrink-0">
             <Shield className="w-6 h-6 text-[#10B981]" />
           </div>
@@ -353,7 +363,12 @@ export const ResponderAlertLogs = () => {
         </div>
 
         {/* Avg Response Time */}
-        <div className="bg-[#F6F3F2] rounded-lg p-6 flex items-center gap-5">
+        <div className="bg-[#F6F3F2] rounded-lg p-6 flex items-center gap-5 relative overflow-visible group hover:bg-[#F2EDEC] transition-colors cursor-help">
+          {/* Tooltip */}
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-[#1C1B1B] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+            Average time from alert trigger to first responder action
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#1C1B1B]"></div>
+          </div>
           <div className="w-12 h-12 bg-[#E0F2FE] rounded-lg flex items-center justify-center shrink-0">
             <Zap className="w-6 h-6 text-[#0284C7]" />
           </div>

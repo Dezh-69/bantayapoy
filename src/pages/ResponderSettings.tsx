@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import type { StationSettings } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { ProfileSkeleton } from '../components/SkeletonLoaders';
-import { Settings, Save, CheckCircle2, User, Phone, Shield, Calendar, AlertTriangle } from 'lucide-react';
+import { Settings, Save, CheckCircle2, User, Phone, Shield, Calendar, AlertTriangle, Building2, MapPin, Mail, Plus, Trash2 } from 'lucide-react';
 
 export const ResponderSettings = () => {
   const { profile } = useAuth();
@@ -16,6 +17,18 @@ export const ResponderSettings = () => {
   const [origName, setOrigName] = useState('');
   const [origContact, setOrigContact] = useState('');
 
+  // Station Settings State
+  const [stationLoading, setStationLoading] = useState(true);
+  const [stationSaving, setStationSaving] = useState(false);
+  const [stationSuccess, setStationSuccess] = useState('');
+  const [stationError, setStationError] = useState('');
+  
+  const [stationName, setStationName] = useState('');
+  const [address, setAddress] = useState('');
+  const [stationContact, setStationContact] = useState('');
+  const [email, setEmail] = useState('');
+  const [keyPersonnel, setKeyPersonnel] = useState<{title: string, name: string, contact: string}[]>([]);
+
   useEffect(() => {
     if (profile) {
       setFullName(profile.full_name || '');
@@ -23,13 +36,31 @@ export const ResponderSettings = () => {
       setOrigName(profile.full_name || '');
       setOrigContact(profile.contact_number || '');
     }
+    fetchStationSettings();
   }, [profile]);
+
+  const fetchStationSettings = async () => {
+    try {
+      const { data, error } = await supabase.from('station_settings').select('*').eq('id', 1).single();
+      if (data) {
+        setStationName(data.station_name);
+        setAddress(data.address);
+        setStationContact(data.contact_number);
+        setEmail(data.email);
+        setKeyPersonnel(data.key_personnel || []);
+      }
+    } catch (e) {
+      console.error('Error fetching station settings:', e);
+    } finally {
+      setStationLoading(false);
+    }
+  };
 
   useEffect(() => {
     setHasChanges(fullName !== origName || contactNumber !== origContact);
   }, [fullName, contactNumber, origName, origContact]);
 
-  const handleSave = async () => {
+  const handleSaveProfile = async () => {
     if (!profile) return;
     setSaving(true);
     setSuccessMsg('');
@@ -58,6 +89,51 @@ export const ResponderSettings = () => {
     }
   };
 
+  const handleSaveStation = async () => {
+    setStationSaving(true);
+    setStationSuccess('');
+    setStationError('');
+    try {
+      const { error } = await supabase
+        .from('station_settings')
+        .update({
+          station_name: stationName.trim(),
+          address: address.trim(),
+          contact_number: stationContact.trim(),
+          email: email.trim(),
+          key_personnel: keyPersonnel
+        })
+        .eq('id', 1);
+
+      if (error) throw error;
+
+      setStationSuccess('Station information updated successfully!');
+      setTimeout(() => setStationSuccess(''), 4000);
+    } catch (e: any) {
+      console.error(e);
+      setStationError('Failed to update station info: ' + (e.message || 'Unknown error'));
+      setTimeout(() => setStationError(''), 5000);
+    } finally {
+      setStationSaving(false);
+    }
+  };
+
+  const addPersonnel = () => {
+    setKeyPersonnel([...keyPersonnel, { title: '', name: '', contact: '' }]);
+  };
+
+  const removePersonnel = (index: number) => {
+    const updated = [...keyPersonnel];
+    updated.splice(index, 1);
+    setKeyPersonnel(updated);
+  };
+
+  const updatePersonnel = (index: number, field: 'title' | 'name' | 'contact', value: string) => {
+    const updated = [...keyPersonnel];
+    updated[index][field] = value;
+    setKeyPersonnel(updated);
+  };
+
   if (!profile) return <ProfileSkeleton />;
 
   return (
@@ -69,61 +145,207 @@ export const ResponderSettings = () => {
           <span className="text-[10px] font-bold uppercase tracking-[0.1em]">Account Management</span>
         </div>
         <h1 className="text-3xl font-black tracking-tight text-text-heading">Settings</h1>
-        <p className="text-sm text-text-muted mt-1">Manage your profile information and account preferences.</p>
+        <p className="text-sm text-text-muted mt-1">Manage your profile and station information.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Profile Form */}
-        <div className="lg:col-span-2 bg-surface-card border border-border rounded-lg p-8">
-          <h2 className="text-lg font-black tracking-tight text-text-heading mb-6">Profile Information</h2>
+        <div className="lg:col-span-2 flex flex-col gap-6">
+          {/* Profile Form */}
+          <div className="bg-surface-card border border-border rounded-lg p-8">
+            <h2 className="text-lg font-black tracking-tight text-text-heading mb-6">Personal Profile</h2>
 
-          <div className="flex flex-col gap-6">
-            <div>
-              <label className="block text-xs font-bold text-text-body mb-1.5 uppercase tracking-[0.1em]">Full Name</label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
-                <input
-                  type="text"
-                  value={fullName}
-                  onChange={e => setFullName(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-surface-alt border border-border rounded-md text-sm text-text focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
-                />
+            <div className="flex flex-col gap-6">
+              <div>
+                <label className="block text-xs font-bold text-text-body mb-1.5 uppercase tracking-[0.1em]">Full Name</label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={e => setFullName(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-surface-alt border border-border rounded-md text-sm text-text focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div>
-              <label className="block text-xs font-bold text-text-body mb-1.5 uppercase tracking-[0.1em]">Contact Number</label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
-                <input
-                  type="text"
-                  value={contactNumber}
-                  onChange={e => setContactNumber(e.target.value)}
-                  placeholder="+63 900 000 0000"
-                  className="w-full pl-10 pr-4 py-3 bg-surface-alt border border-border rounded-md text-sm text-text placeholder-text-faint focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
-                />
+              <div>
+                <label className="block text-xs font-bold text-text-body mb-1.5 uppercase tracking-[0.1em]">Contact Number</label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
+                  <input
+                    type="text"
+                    value={contactNumber}
+                    onChange={e => setContactNumber(e.target.value)}
+                    placeholder="+63 900 000 0000"
+                    className="w-full pl-10 pr-4 py-3 bg-surface-alt border border-border rounded-md text-sm text-text placeholder-text-faint focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="flex gap-3 mt-2">
-              <button
-                onClick={handleSave}
-                disabled={saving || !hasChanges}
-                className="flex-1 py-3 bg-gradient-to-b from-[#B91C1C] to-[#991B1B] text-white text-sm font-bold rounded-lg hover:from-[#DC2626] hover:to-[#B91C1C] transition-all disabled:opacity-40 flex items-center justify-center gap-2"
-              >
-                <Save className="w-4 h-4" />
-                {saving ? 'SAVING...' : hasChanges ? 'SAVE CHANGES' : 'NO CHANGES'}
-              </button>
-            </div>
-
-            {successMsg && (
-              <div className="flex items-center gap-2 justify-center text-sm font-bold text-success-dark">
-                <CheckCircle2 className="w-4 h-4" /> {successMsg}
+              <div className="flex gap-3 mt-2">
+                <button
+                  onClick={handleSaveProfile}
+                  disabled={saving || !hasChanges}
+                  className="w-full sm:w-auto px-8 py-3 bg-gradient-to-b from-[#B91C1C] to-[#991B1B] text-white text-sm font-bold rounded-lg hover:from-[#DC2626] hover:to-[#B91C1C] transition-all disabled:opacity-40 flex items-center justify-center gap-2"
+                >
+                  <Save className="w-4 h-4" />
+                  {saving ? 'SAVING...' : 'SAVE PROFILE'}
+                </button>
               </div>
-            )}
-            {errorMsg && (
-              <div className="flex items-center gap-2 justify-center text-sm font-bold text-[#DC2626]">
-                <AlertTriangle className="w-4 h-4" /> {errorMsg}
+
+              {successMsg && (
+                <div className="flex items-center gap-2 text-sm font-bold text-success-dark">
+                  <CheckCircle2 className="w-4 h-4" /> {successMsg}
+                </div>
+              )}
+              {errorMsg && (
+                <div className="flex items-center gap-2 text-sm font-bold text-[#DC2626]">
+                  <AlertTriangle className="w-4 h-4" /> {errorMsg}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Station Info Form */}
+          <div className="bg-surface-card border border-border rounded-lg p-8">
+            <h2 className="text-lg font-black tracking-tight text-text-heading mb-6">Station Information</h2>
+            
+            {stationLoading ? (
+              <p className="text-text-faint text-sm">Loading station settings...</p>
+            ) : (
+              <div className="flex flex-col gap-6">
+                <div>
+                  <label className="block text-xs font-bold text-text-body mb-1.5 uppercase tracking-[0.1em]">Station Name</label>
+                  <div className="relative">
+                    <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
+                    <input
+                      type="text"
+                      value={stationName}
+                      onChange={e => setStationName(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 bg-surface-alt border border-border rounded-md text-sm text-text focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-text-body mb-1.5 uppercase tracking-[0.1em]">Address</label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
+                    <input
+                      type="text"
+                      value={address}
+                      onChange={e => setAddress(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 bg-surface-alt border border-border rounded-md text-sm text-text focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-bold text-text-body mb-1.5 uppercase tracking-[0.1em]">Contact Number</label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
+                      <input
+                        type="text"
+                        value={stationContact}
+                        onChange={e => setStationContact(e.target.value)}
+                        className="w-full pl-10 pr-4 py-3 bg-surface-alt border border-border rounded-md text-sm text-text focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-text-body mb-1.5 uppercase tracking-[0.1em]">Email</label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        className="w-full pl-10 pr-4 py-3 bg-surface-alt border border-border rounded-md text-sm text-text focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-border mt-2">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm font-bold text-text-heading">Key Personnel</h3>
+                    <button 
+                      onClick={addPersonnel}
+                      className="text-xs font-bold text-[#B91C1C] flex items-center gap-1 hover:text-[#DC2626]"
+                    >
+                      <Plus className="w-3.5 h-3.5" /> ADD PERSONNEL
+                    </button>
+                  </div>
+                  
+                  <div className="flex flex-col gap-3">
+                    {keyPersonnel.map((person, index) => (
+                      <div key={index} className="flex flex-col sm:flex-row gap-3 bg-surface-alt p-3 rounded-lg border border-border items-start sm:items-center">
+                        <div className="flex-1 w-full sm:w-auto">
+                          <input
+                            type="text"
+                            placeholder="Title / Position (e.g. Fire Chief)"
+                            value={person.title}
+                            onChange={e => updatePersonnel(index, 'title', e.target.value)}
+                            className="w-full bg-white border border-border rounded px-3 py-2 text-xs focus:border-primary focus:outline-none"
+                          />
+                        </div>
+                        <div className="flex-1 w-full sm:w-auto">
+                          <input
+                            type="text"
+                            placeholder="Full Name"
+                            value={person.name}
+                            onChange={e => updatePersonnel(index, 'name', e.target.value)}
+                            className="w-full bg-white border border-border rounded px-3 py-2 text-xs focus:border-primary focus:outline-none"
+                          />
+                        </div>
+                        <div className="flex-1 w-full sm:w-auto">
+                          <input
+                            type="text"
+                            placeholder="Contact Number"
+                            value={person.contact}
+                            onChange={e => updatePersonnel(index, 'contact', e.target.value)}
+                            className="w-full bg-white border border-border rounded px-3 py-2 text-xs focus:border-primary focus:outline-none"
+                          />
+                        </div>
+                        <button 
+                          onClick={() => removePersonnel(index)}
+                          className="p-2 text-text-faint hover:text-[#DC2626] transition-colors self-end sm:self-auto"
+                          title="Remove"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                    {keyPersonnel.length === 0 && (
+                      <p className="text-xs text-text-faint text-center py-4 bg-surface-alt rounded border border-dashed border-border">
+                        No key personnel added. Click the add button to start.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex gap-3 mt-4">
+                  <button
+                    onClick={handleSaveStation}
+                    disabled={stationSaving}
+                    className="w-full sm:w-auto px-8 py-3 bg-[#1C1B1B] text-white text-sm font-bold rounded-lg hover:bg-black transition-all disabled:opacity-40 flex items-center justify-center gap-2"
+                  >
+                    <Save className="w-4 h-4" />
+                    {stationSaving ? 'SAVING...' : 'SAVE STATION INFO'}
+                  </button>
+                </div>
+
+                {stationSuccess && (
+                  <div className="flex items-center gap-2 text-sm font-bold text-success-dark">
+                    <CheckCircle2 className="w-4 h-4" /> {stationSuccess}
+                  </div>
+                )}
+                {stationError && (
+                  <div className="flex items-center gap-2 text-sm font-bold text-[#DC2626]">
+                    <AlertTriangle className="w-4 h-4" /> {stationError}
+                  </div>
+                )}
               </div>
             )}
           </div>

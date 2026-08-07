@@ -177,7 +177,7 @@ export const ResidentDeviceInfo = () => {
             <h3 className="text-xs font-bold uppercase tracking-[0.1em] text-[#52525B] mb-3">Device Location</h3>
             <div className="h-56 rounded overflow-hidden relative z-0">
               <MapContainer center={[displayLat, displayLng]} zoom={14} style={{ height: '100%', width: '100%' }} zoomControl={false}>
-                <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+                <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
                 <Marker position={[displayLat, displayLng]} icon={markerIcon}>
                   <Popup><strong>{device.device_code}</strong><br />{device.location_desc}</Popup>
                 </Marker>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import type { Device } from '../lib/supabase';
-import { Cpu, ChevronRight, Info, Loader2 } from 'lucide-react';
+import { Cpu, ChevronRight, Info, Loader2, AlertTriangle } from 'lucide-react';
 import { CardListSkeleton } from '../components/SkeletonLoaders';
 
 const timeAgo = (dateStr: string) => {
@@ -175,6 +175,7 @@ export const Devices = () => {
                 unit="°C"
                 minLabel="Safe (20°C)"
                 maxLabel="Critical (120°C)"
+                warning={form.temp_threshold < 40 ? 'Very low — may cause frequent false alarms' : form.temp_threshold > 80 ? 'Dangerously high — fire may go undetected' : undefined}
               />
 
               {/* Smoke Particulate Threshold */}
@@ -187,6 +188,7 @@ export const Devices = () => {
                 unit="% Obscuration"
                 minLabel="Clear"
                 maxLabel="Hazardous"
+                warning={form.co_threshold < 10 ? 'Very sensitive — expect frequent alerts' : form.co_threshold > 80 ? 'Very high — smoke may go undetected' : undefined}
               />
             </div>
 
@@ -334,6 +336,7 @@ const ThresholdSlider = ({
   unit,
   minLabel,
   maxLabel,
+  warning,
 }: {
   label: string;
   value: number;
@@ -343,6 +346,7 @@ const ThresholdSlider = ({
   unit: string;
   minLabel: string;
   maxLabel: string;
+  warning?: string;
 }) => {
   const percentage = ((value - min) / (max - min)) * 100;
 
@@ -392,6 +396,13 @@ const ThresholdSlider = ({
           {maxLabel}
         </span>
       </div>
+      
+      {warning && (
+        <div className="flex items-center gap-1.5 mt-1 text-[#F59E0B]">
+          <AlertTriangle size={12} />
+          <span className="text-[10px] font-bold">{warning}</span>
+        </div>
+      )}
     </div>
   );
 };

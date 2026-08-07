@@ -68,3 +68,16 @@ export interface AlertEvent {
   triggered_at: string;
   devices?: Device; // For joined queries
 }
+
+export interface StationSettings {
+  id: number;
+  station_name: string;
+  address: string;
+  contact_number: string;
+  email: string;
+  key_personnel: {
+    title: string;
+    name: string;
+    contact: string;
+  }[];
+}

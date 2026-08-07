@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import type { Device, AlertEvent } from '../lib/supabase';
 import { 
@@ -90,6 +91,7 @@ const timeAgo = (dateStr: string) => {
 };
 
 export const InteractiveMap = () => {
+  const navigate = useNavigate();
   const [devices, setDevices] = useState<Device[]>([]);
   const [alerts, setAlerts] = useState<AlertEvent[]>([]);
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
@@ -382,7 +384,10 @@ export const InteractiveMap = () => {
 
         {/* Footer */}
         <div className="p-6 bg-white/30 border-t border-white/50 shrink-0">
-          <button className="w-full bg-[#18181B] text-white py-3 rounded text-xs font-extrabold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-black transition-colors">
+          <button 
+            onClick={() => navigate('/admin/logs')}
+            className="w-full bg-[#18181B] text-white py-3 rounded text-xs font-extrabold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-black transition-colors"
+          >
             <Layers className="w-4 h-4" />
             View Full Log
           </button>

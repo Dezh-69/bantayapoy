@@ -340,8 +340,13 @@ export const Logs = () => {
       {/* ─── Footer Summary Cards ─── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
         {/* HIGH PRIORITY TODAY */}
-        <div className="bg-[#F6F3F2] rounded-lg p-6 flex items-center gap-5 relative overflow-hidden group hover:bg-[#F2EDEC] transition-colors">
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#DC2626]/20 group-hover:bg-[#DC2626] transition-colors"></div>
+        <div className="bg-[#F6F3F2] rounded-lg p-6 flex items-center gap-5 relative overflow-visible group hover:bg-[#F2EDEC] transition-colors cursor-help">
+          {/* Tooltip */}
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-[#1C1B1B] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+            Total number of critical events logged today
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#1C1B1B]"></div>
+          </div>
+          <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg bg-[#DC2626]/20 group-hover:bg-[#DC2626] transition-colors"></div>
           <div className="w-12 h-12 bg-[#FEE2E2] rounded flex items-center justify-center shrink-0">
             <AlertTriangle className="w-6 h-6 text-[#DC2626]" />
           </div>
@@ -356,8 +361,13 @@ export const Logs = () => {
         </div>
 
         {/* SYSTEM THROTTLING */}
-        <div className="bg-[#F6F3F2] rounded-lg p-6 flex items-center gap-5 relative overflow-hidden group hover:bg-[#F2EDEC] transition-colors">
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#00799C]"></div>
+        <div className="bg-[#F6F3F2] rounded-lg p-6 flex items-center gap-5 relative overflow-visible group hover:bg-[#F2EDEC] transition-colors cursor-help">
+          {/* Tooltip */}
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-[#1C1B1B] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+            Current state of API rate limiting
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#1C1B1B]"></div>
+          </div>
+          <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg bg-[#00799C]"></div>
           <div className="w-12 h-12 bg-[#E0F2FE] rounded flex items-center justify-center shrink-0">
             <Zap className="w-6 h-6 text-[#00799C]" />
           </div>
@@ -372,8 +382,13 @@ export const Logs = () => {
         </div>
 
         {/* RETENTION HEALTH */}
-        <div className="bg-[#F6F3F2] rounded-lg p-6 flex items-center gap-5 relative overflow-hidden group hover:bg-[#F2EDEC] transition-colors">
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#A1A1AA]/20 group-hover:bg-[#A1A1AA] transition-colors"></div>
+        <div className="bg-[#F6F3F2] rounded-lg p-6 flex items-center gap-5 relative overflow-visible group hover:bg-[#F2EDEC] transition-colors cursor-help">
+          {/* Tooltip */}
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-[#1C1B1B] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+            Percentage of logs successfully retained
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#1C1B1B]"></div>
+          </div>
+          <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg bg-[#A1A1AA]/20 group-hover:bg-[#A1A1AA] transition-colors"></div>
           <div className="w-12 h-12 bg-[#E5E7EB] rounded flex items-center justify-center shrink-0">
             <History className="w-6 h-6 text-[#6B7280]" />
           </div>

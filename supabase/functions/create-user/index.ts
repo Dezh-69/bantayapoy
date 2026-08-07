@@ -45,7 +45,7 @@ serve(async (req) => {
     }
 
     // 2. Parse request body
-    const { full_name, email, role, password, device_id } = await req.json()
+    const { full_name, email, role, password, device_id, contact_number } = await req.json()
 
     // 3. Create user using service role key
     const supabaseAdmin = createClient(
@@ -66,6 +66,7 @@ serve(async (req) => {
       id: newUser.user.id,
       full_name,
       role,
+      contact_number: contact_number || null,
       device_id: device_id || null,
       setup_complete: false,
     })

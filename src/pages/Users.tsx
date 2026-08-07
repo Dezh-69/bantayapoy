@@ -59,7 +59,18 @@ export const Users = () => {
         body: newUser
       });
 
-      if (error) throw error;
+      if (error) {
+        let msg = error.message;
+        if (error.context && error.context.json) {
+          try {
+            const body = await error.context.json();
+            msg = body.error || msg;
+          } catch (e) {
+            // fallback
+          }
+        }
+        throw new Error(msg);
+      }
       
       setIsModalOpen(false);
       fetchProfiles();
@@ -325,7 +336,7 @@ export const Users = () => {
               <div>
                 <label className="block text-xs font-bold text-text-body mb-1.5 uppercase tracking-[0.1em]">Contact Number (For SMS/Viber)</label>
                 <input 
-                  type="tel"
+                  type="tel" required
                   value={newUser.contact_number}
                   onChange={e => setNewUser({...newUser, contact_number: e.target.value})}
                   className="w-full bg-surface-card border border-border rounded-md px-4 py-2.5 text-sm text-text focus:border-teal focus:ring-1 focus:ring-teal/30 transition-all"

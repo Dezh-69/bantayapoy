@@ -8,6 +8,7 @@ export const ResidentLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+  const [showLogoutModal, setShowLogoutModal] = React.useState(false);
 
   const handleLogout = async () => {
     await signOut();
@@ -22,7 +23,7 @@ export const ResidentLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F4F4F5] flex flex-col font-sans overflow-x-hidden">
+    <div className="h-screen w-screen bg-[#F4F4F5] flex flex-col font-sans overflow-hidden">
       {/* Top Header */}
       <header className="bg-[#B91C1C] h-16 shadow-sm flex items-center justify-between px-3 lg:px-8 relative z-20 w-full min-w-0">
         <div className="flex items-center gap-2 lg:gap-4 min-w-0 shrink-0">
@@ -58,7 +59,7 @@ export const ResidentLayout = () => {
 
         {/* Sidebar Navigation */}
         <aside className={`
-          absolute lg:static inset-y-0 left-0 z-30 w-64 bg-[#FCF9F8] border-r border-[#E5E2E1] flex flex-col h-[calc(100vh-64px)]
+          absolute lg:static inset-y-0 left-0 z-30 w-64 bg-[#FCF9F8] border-r border-[#E5E2E1] flex flex-col h-full
           transform transition-transform duration-300 ease-in-out
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}>
@@ -110,7 +111,7 @@ export const ResidentLayout = () => {
               Settings
             </NavLink>
             <button
-              onClick={handleLogout}
+              onClick={() => setShowLogoutModal(true)}
               className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-[#52525B] hover:bg-[#FEE2E2] hover:text-[#DC2626] transition-colors text-sm font-medium"
             >
               <LogOut size={18} />
@@ -119,13 +120,36 @@ export const ResidentLayout = () => {
           </div>
         </aside>
 
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-auto p-4 lg:p-8 bg-[#F4F4F5]">
+        <main className="flex-1 overflow-y-auto h-full p-4 lg:p-8 bg-[#F4F4F5] relative z-0">
           <div className="max-w-6xl mx-auto">
             <Outlet />
           </div>
         </main>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full border border-border animate-in fade-in zoom-in duration-200">
+            <h3 className="text-xl font-bold text-text-heading mb-2">Confirm Logout</h3>
+            <p className="text-sm text-text-body mb-6">Are you sure you want to log out? You will need to log back in to access your dashboard.</p>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={() => setShowLogoutModal(false)}
+                className="px-4 py-2 text-sm font-bold text-text-muted hover:text-text-heading transition-colors"
+              >
+                CANCEL
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-5 py-2 bg-[#B91C1C] hover:bg-[#991B1B] text-white text-sm font-bold rounded-lg transition-colors shadow-sm"
+              >
+                LOGOUT
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -443,7 +443,7 @@ export const ResidentHome = () => {
                 style={{ height: '100%', width: '100%' }}
                 zoomControl={false}
               >
-                <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+                <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
                 <Marker position={[displayLat, displayLng]} icon={markerIcon}>
                   <Popup>
                     <strong>{device.device_code}</strong><br />
