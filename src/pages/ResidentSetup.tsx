@@ -99,8 +99,9 @@ export const ResidentSetup = () => {
                 <input
                   type="tel"
                   required
+                  maxLength={11}
                   value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
+                  onChange={(e) => setMobile(e.target.value.replace(/\D/g, ''))}
                   placeholder="09XXXXXXXXX"
                   className="w-full bg-[#FCF9F8] border border-[#E5E2E1] rounded-md px-4 py-3 text-base text-[#231918] placeholder-[rgba(83,67,65,0.5)] focus:outline-none focus:ring-2 focus:ring-[#D32F2F]/30 focus:border-[#D32F2F] transition-all"
                 />
@@ -116,8 +117,9 @@ export const ResidentSetup = () => {
                 <input
                   type="tel"
                   required
+                  maxLength={11}
                   value={confirmMobile}
-                  onChange={(e) => setConfirmMobile(e.target.value)}
+                  onChange={(e) => setConfirmMobile(e.target.value.replace(/\D/g, ''))}
                   placeholder="Re-enter your number"
                   className={`w-full bg-[#FCF9F8] border rounded-md px-4 py-3 text-base text-[#231918] placeholder-[rgba(83,67,65,0.5)] focus:outline-none focus:ring-2 transition-all ${
                     error ? 'border-[#D32F2F] focus:ring-[#D32F2F]/30' : 'border-[#E5E2E1] focus:border-[#D32F2F] focus:ring-[#D32F2F]/30'

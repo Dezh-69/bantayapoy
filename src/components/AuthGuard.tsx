@@ -46,6 +46,32 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ allowedRoles }) => {
     );
   }
 
+  if (profile.status !== 'approved') {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#FCF9F8] p-4 font-['Inter',_sans-serif]">
+        <div className="bg-white p-8 rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.08)] border border-[#E5E2E1] max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-[#FEF3C7] rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-[#D97706]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-black text-[#231918] mb-2">Account {profile.status === 'pending' ? 'Pending' : 'Rejected'}</h2>
+          <p className="text-[#534341] text-sm mb-6 leading-relaxed">
+            {profile.status === 'pending' 
+              ? "Your registration is currently under review by an administrator. You will be able to access the system once approved."
+              : "Your registration request has been rejected. Please contact your system administrator for more details."}
+          </p>
+          <button 
+            onClick={() => signOut()} 
+            className="w-full py-3 bg-[#D32F2F] text-white font-bold text-sm tracking-[0.1em] uppercase rounded-lg shadow-sm hover:bg-[#B91C1C] transition-colors"
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (
     location.pathname === '/' || 
     (allowedRoles && !allowedRoles.includes(profile.role))

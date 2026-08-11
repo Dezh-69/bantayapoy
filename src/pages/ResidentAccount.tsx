@@ -39,8 +39,20 @@ export const ResidentAccount = () => {
     setHasChanges(fullName !== origName || contactNumber !== origContact);
   }, [fullName, contactNumber, origName, origContact]);
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 11);
+    setContactNumber(value);
+  };
+
   const handleSave = async () => {
     if (!profile) return;
+
+    if (contactNumber && !/^09\d{9}$/.test(contactNumber)) {
+      setErrorMsg("Contact number must be 11 digits starting with 09");
+      setTimeout(() => setErrorMsg(''), 5000);
+      return;
+    }
+
     setSaving(true);
     setSuccessMsg('');
     setErrorMsg('');
@@ -106,10 +118,11 @@ export const ResidentAccount = () => {
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A1A1AA]" />
                 <input
-                  type="text"
+                  type="tel"
                   value={contactNumber}
-                  onChange={e => setContactNumber(e.target.value)}
-                  placeholder="+63 900 000 0000"
+                  onChange={handlePhoneChange}
+                  maxLength={11}
+                  placeholder="09XXXXXXXXX"
                   className="w-full pl-10 pr-4 py-3 bg-[#FCF9F8] border border-[#E4E4E7] rounded-md text-sm text-[#18181B] placeholder-[#A1A1AA] focus:border-[#B91C1C] focus:ring-1 focus:ring-[#B91C1C]/30 transition-all"
                 />
               </div>

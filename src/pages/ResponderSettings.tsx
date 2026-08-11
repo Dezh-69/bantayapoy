@@ -13,6 +13,7 @@ export const ResponderSettings = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [hasChanges, setHasChanges] = useState(false);
+  const [profileContactError, setProfileContactError] = useState('');
 
   const [origName, setOrigName] = useState('');
   const [origContact, setOrigContact] = useState('');
@@ -22,6 +23,8 @@ export const ResponderSettings = () => {
   const [stationSaving, setStationSaving] = useState(false);
   const [stationSuccess, setStationSuccess] = useState('');
   const [stationError, setStationError] = useState('');
+  const [stationContactError, setStationContactError] = useState('');
+  const [personnelContactErrors, setPersonnelContactErrors] = useState<Record<number, string>>({});
   
   const [stationName, setStationName] = useState('');
   const [address, setAddress] = useState('');
@@ -62,6 +65,14 @@ export const ResponderSettings = () => {
 
   const handleSaveProfile = async () => {
     if (!profile) return;
+    
+    // Validate contact number format if provided
+    const phoneRegex = /^(09\d{9})$/;
+    if (contactNumber && !phoneRegex.test(contactNumber)) {
+      setProfileContactError('Enter a valid Philippine mobile number (e.g. 09171234567).');
+      return;
+    }
+    setProfileContactError('');
     setSaving(true);
     setSuccessMsg('');
     setErrorMsg('');
@@ -90,6 +101,28 @@ export const ResponderSettings = () => {
   };
 
   const handleSaveStation = async () => {
+    const phoneRegex = /^(09\d{9})$/;
+    
+    // Validate station contact
+    if (stationContact && !phoneRegex.test(stationContact)) {
+      setStationContactError('Enter a valid Philippine mobile number (e.g. 09171234567).');
+      return;
+    }
+    setStationContactError('');
+    
+    // Validate personnel contacts
+    const pErrors: Record<number, string> = {};
+    keyPersonnel.forEach((person, index) => {
+      if (person.contact && !phoneRegex.test(person.contact)) {
+        pErrors[index] = 'Invalid format (e.g. 09171234567)';
+      }
+    });
+    if (Object.keys(pErrors).length > 0) {
+      setPersonnelContactErrors(pErrors);
+      return;
+    }
+    setPersonnelContactErrors({});
+    
     setStationSaving(true);
     setStationSuccess('');
     setStationError('');
@@ -130,7 +163,16 @@ export const ResponderSettings = () => {
 
   const updatePersonnel = (index: number, field: 'title' | 'name' | 'contact', value: string) => {
     const updated = [...keyPersonnel];
-    updated[index][field] = value;
+    if (field === 'contact') {
+      updated[index][field] = value.replace(/\D/g, '');
+      if (personnelContactErrors[index]) {
+        const newErrors = { ...personnelContactErrors };
+        delete newErrors[index];
+        setPersonnelContactErrors(newErrors);
+      }
+    } else {
+      updated[index][field] = value;
+    }
     setKeyPersonnel(updated);
   };
 
@@ -173,13 +215,20 @@ export const ResponderSettings = () => {
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
                   <input
-                    type="text"
+                    type="tel"
+                    maxLength={11}
                     value={contactNumber}
-                    onChange={e => setContactNumber(e.target.value)}
-                    placeholder="+63 900 000 0000"
-                    className="w-full pl-10 pr-4 py-3 bg-surface-alt border border-border rounded-md text-sm text-text placeholder-text-faint focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
+                    onChange={e => {
+                      const val = e.target.value.replace(/\D/g, '');
+                      setContactNumber(val);
+                      if (profileContactError) setProfileContactError('');
+                    }}
+                    placeholder="09XXXXXXXXX"
+                    className={`w-full pl-10 pr-4 py-3 bg-surface-alt border rounded-md text-sm text-text placeholder-text-faint focus:ring-1 transition-all ${profileContactError ? 'border-[#DC2626] focus:border-[#DC2626] focus:ring-[#DC2626]/30' : 'border-border focus:border-primary focus:ring-primary/30'}`}
                   />
                 </div>
+                <span className="text-[10px] text-text-faint mt-1 block">Philippine number only — e.g. 09171234567</span>
+                {profileContactError && <span className="text-[#DC2626] text-[11px] font-bold mt-1 block">{profileContactError}</span>}
               </div>
 
               <div className="flex gap-3 mt-2">
@@ -246,12 +295,20 @@ export const ResponderSettings = () => {
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
                       <input
-                        type="text"
+                        type="tel"
+                        maxLength={11}
                         value={stationContact}
-                        onChange={e => setStationContact(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 bg-surface-alt border border-border rounded-md text-sm text-text focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
+                        onChange={e => {
+                          const val = e.target.value.replace(/\D/g, '');
+                          setStationContact(val);
+                          if (stationContactError) setStationContactError('');
+                        }}
+                        placeholder="09XXXXXXXXX"
+                        className={`w-full pl-10 pr-4 py-3 bg-surface-alt border rounded-md text-sm text-text focus:ring-1 transition-all ${stationContactError ? 'border-[#DC2626] focus:border-[#DC2626] focus:ring-[#DC2626]/30' : 'border-border focus:border-primary focus:ring-primary/30'}`}
                       />
                     </div>
+                    <span className="text-[10px] text-text-faint mt-1 block">Philippine number only — e.g. 09171234567</span>
+                    {stationContactError && <span className="text-[#DC2626] text-[11px] font-bold mt-1 block">{stationContactError}</span>}
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-text-body mb-1.5 uppercase tracking-[0.1em]">Email</label>
@@ -301,12 +358,14 @@ export const ResponderSettings = () => {
                         </div>
                         <div className="flex-1 w-full sm:w-auto">
                           <input
-                            type="text"
-                            placeholder="Contact Number"
+                            type="tel"
+                            maxLength={11}
+                            placeholder="09XXXXXXXXX"
                             value={person.contact}
                             onChange={e => updatePersonnel(index, 'contact', e.target.value)}
-                            className="w-full bg-white border border-border rounded px-3 py-2 text-xs focus:border-primary focus:outline-none"
+                            className={`w-full bg-white border rounded px-3 py-2 text-xs focus:outline-none ${personnelContactErrors[index] ? 'border-[#DC2626] focus:border-[#DC2626]' : 'border-border focus:border-primary'}`}
                           />
+                          {personnelContactErrors[index] && <span className="text-[#DC2626] text-[10px] font-bold mt-0.5 block">{personnelContactErrors[index]}</span>}
                         </div>
                         <button 
                           onClick={() => removePersonnel(index)}

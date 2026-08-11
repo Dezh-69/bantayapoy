@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { 
   Wifi, WifiOff, ShieldAlert, BellRing, Clock, 
   MapPin, Activity, CheckCircle2, AlertTriangle, 
-  Battery, Signal, Zap, Shield, PhoneCall, RefreshCw, XCircle
+  Battery, Signal, Zap, Shield, PhoneCall, RefreshCw, XCircle, Cpu
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -88,6 +88,11 @@ export const ResidentHome = () => {
   const [diagnosticRunning, setDiagnosticRunning] = useState(false);
   const [diagnosticResult, setDiagnosticResult] = useState<string | null>(null);
   const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
+  
+  // Device linking state
+  const [linkCode, setLinkCode] = useState('');
+  const [linkLoading, setLinkLoading] = useState(false);
+  const [linkError, setLinkError] = useState<string | null>(null);
 
   const fetchData = useCallback(async (deviceId: string) => {
     try {
@@ -159,8 +164,75 @@ export const ResidentHome = () => {
     }, 2500);
   };
 
+  const handleLinkDevice = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!linkCode.trim()) return;
+    setLinkLoading(true);
+    setLinkError(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('link-device', {
+        body: { device_code: linkCode.trim() }
+      });
+      if (error) {
+        if (error.context && typeof error.context.json === 'function') {
+          try {
+            const errData = await error.context.json();
+            throw new Error(errData.error || "Failed to link device.");
+          } catch (e) {}
+        }
+        throw new Error(error.message);
+      }
+      if (data?.error) throw new Error(data.error);
+      
+      window.location.reload();
+    } catch (err: any) {
+      setLinkError(err.message || 'Failed to link device.');
+    } finally {
+      setLinkLoading(false);
+    }
+  };
+
   if (loading) return <ResidentHomeSkeleton />;
-  if (!device) return <div className="p-8 font-bold text-red-600">No device registered to your account.</div>;
+  if (!device) {
+    return (
+      <div className="flex items-center justify-center min-h-[70vh] px-4 font-['Inter',_sans-serif]">
+        <div className="bg-white p-8 rounded-xl shadow-sm border border-[#E5E2E1] max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-[#FEE2E2] rounded-full flex items-center justify-center mx-auto mb-6">
+            <Cpu className="text-[#D32F2F] w-8 h-8" />
+          </div>
+          <h2 className="text-2xl font-black text-[#231918] mb-2 tracking-tight">Link Your Device</h2>
+          <p className="text-[#534341] text-sm mb-8">
+            You don't have a device linked to your account yet. Enter your device code below to get started.
+          </p>
+          
+          <form onSubmit={handleLinkDevice} className="space-y-4">
+            <div>
+              <input
+                type="text"
+                required
+                placeholder="e.g. FA-001"
+                value={linkCode}
+                onChange={(e) => setLinkCode(e.target.value)}
+                className="w-full px-4 py-3 bg-[#FCF9F8] border border-[#E5E2E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D32F2F] focus:border-transparent text-center font-bold text-[#231918] tracking-widest uppercase"
+              />
+            </div>
+            {linkError && (
+              <div className="p-3 bg-[#FEF2F2] border border-[#FECACA] rounded-lg text-[#DC2626] text-sm font-medium">
+                {linkError}
+              </div>
+            )}
+            <button
+              type="submit"
+              disabled={linkLoading || !linkCode.trim()}
+              className="w-full bg-[#D32F2F] hover:bg-[#B91C1C] text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center disabled:opacity-70"
+            >
+              {linkLoading ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Link Device'}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   const isOnline = device.last_seen_at && (Date.now() - new Date(device.last_seen_at).getTime() < 5 * 60 * 1000);
   const activeAlertCount = activeAlerts.filter(a => !a.resolved_at).length;

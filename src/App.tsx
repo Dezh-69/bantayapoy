@@ -28,6 +28,9 @@ import { ResidentSystemLog } from './pages/ResidentSystemLog';
 import { ResidentAccount } from './pages/ResidentAccount';
 import { NotFound } from './pages/NotFound';
 import { SessionExpired } from './pages/SessionExpired';
+import { RegisterResident } from './pages/RegisterResident';
+import { RegisterResponder } from './pages/RegisterResponder';
+import { PendingApproval } from './pages/PendingApproval';
 
 function App() {
   return (
@@ -36,6 +39,9 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
+          <Route path="/register/resident" element={<RegisterResident />} />
+          <Route path="/register/responder" element={<RegisterResponder />} />
+          <Route path="/pending-approval" element={<PendingApproval />} />
           <Route path="/session-expired" element={<SessionExpired />} />
 
           {/* Admin Routes */}

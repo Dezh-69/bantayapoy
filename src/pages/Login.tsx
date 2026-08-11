@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -70,7 +70,7 @@ export const Login = () => {
     if (error) {
       const newFailures = failures + 1;
       setFailures(newFailures);
-      setError('Incorrect email or password. Try again.');
+      setError(error.message || 'Incorrect email or password. Try again.');
       
       if (newFailures === 3) setLockoutTimer(10);
       else if (newFailures === 5) setLockoutTimer(30);
@@ -273,6 +273,23 @@ export const Login = () => {
                   </svg>
                 )}
               </button>
+
+              <div className="pt-6 mt-6 border-t border-[#E5E2E1]">
+                <div className="flex flex-col gap-3">
+                  <Link 
+                    to="/register/resident" 
+                    className="w-full flex justify-center py-3 px-4 bg-[#F1E5E4] text-[#D32F2F] font-bold text-sm tracking-[0.1em] uppercase rounded-lg hover:bg-[#EBE0DF] transition-colors"
+                  >
+                    Sign Up as Resident
+                  </Link>
+                  <Link 
+                    to="/register/responder" 
+                    className="w-full flex justify-center py-3 px-4 bg-[#E0F2FE] text-[#00799C] font-bold text-sm tracking-[0.1em] uppercase rounded-lg hover:bg-[#BAE6FD] transition-colors"
+                  >
+                    Request Responder Account
+                  </Link>
+                </div>
+              </div>
 
               {lockoutTimer > 0 && (
                 <div className="text-[#D32F2F] text-sm text-center font-bold">

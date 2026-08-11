@@ -13,6 +13,7 @@ export const ResidentAlertSettings = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [hasChanges, setHasChanges] = useState(false);
+  const [contactError, setContactError] = useState('');
 
   // Form State
   const [tempThreshold, setTempThreshold] = useState(55);
@@ -63,6 +64,14 @@ export const ResidentAlertSettings = () => {
 
   const handleSave = async () => {
     if (!device) return;
+    
+    // Validate contact number format if provided
+    const phoneRegex = /^(09\d{9})$/;
+    if (contactNumber && !phoneRegex.test(contactNumber)) {
+      setContactError('Enter a valid Philippine mobile number (e.g. 09171234567).');
+      return;
+    }
+    setContactError('');
     setSaving(true);
     setSuccessMsg('');
     setErrorMsg('');
@@ -194,16 +203,22 @@ export const ResidentAlertSettings = () => {
                   <MessageSquare size={18} className="text-[#A1A1AA]" />
                 </div>
                 <input
-                  type="text"
-                  placeholder="+63 900 000 0000"
+                  type="tel"
+                  maxLength={11}
+                  placeholder="09XXXXXXXXX"
                   value={contactNumber}
-                  onChange={(e) => setContactNumber(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-white border border-[#E5E2E1] rounded-lg text-sm font-medium focus:outline-none focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition-colors shadow-sm"
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    setContactNumber(val);
+                    if (contactError) setContactError('');
+                  }}
+                  className={`w-full pl-12 pr-4 py-4 bg-white border rounded-lg text-sm font-medium focus:outline-none focus:ring-1 transition-colors shadow-sm ${contactError ? 'border-[#DC2626] focus:border-[#DC2626] focus:ring-[#DC2626]' : 'border-[#E5E2E1] focus:border-[#DC2626] focus:ring-[#DC2626]'}`}
                 />
               </div>
               <p className="text-[10px] text-[#71717A] leading-relaxed">
-                Automated alerts will be dispatched to this number within 150ms of trigger detection.
+                Philippine number only — e.g. 09171234567. Automated alerts will be dispatched to this number within 150ms of trigger detection.
               </p>
+              {contactError && <span className="text-[#DC2626] text-[11px] font-bold mt-1 block">{contactError}</span>}
             </div>
 
             <div className="flex gap-3 mt-4">

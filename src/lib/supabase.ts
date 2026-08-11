@@ -11,15 +11,34 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export type Role = 'admin' | 'bfp_responder' | 'resident';
 
+export type ProfileStatus = 'approved' | 'pending' | 'rejected';
+
 export interface Profile {
   id: string;
   full_name: string;
   role: Role;
   contact_number: string | null;
   device_id: string | null;
+  address: string | null;
+  status: ProfileStatus;
   setup_complete: boolean;
   is_active: boolean;
   created_at: string;
+}
+
+export interface RegistrationRequest {
+  id: string;
+  user_id: string;
+  email: string;
+  requested_role: 'resident' | 'bfp_responder';
+  device_code: string | null;
+  organization: string | null;
+  position: string | null;
+  verification_info: string | null;
+  admin_notes: string | null;
+  reviewed_by: string | null;
+  created_at: string;
+  reviewed_at: string | null;
 }
 
 export interface Device {
