@@ -612,7 +612,7 @@ export const Users = () => {
                   <option value="">Do not assign yet</option>
                   {devices.map((device) => (
                     <option key={device.id} value={device.id}>
-                      {device.device_code} ({device.device_type})
+                      {device.device_code} - {device.label}
                     </option>
                   ))}
                 </select>
@@ -711,7 +711,7 @@ export const Users = () => {
                   <option value="">Select a device</option>
                   {devices.map((device) => (
                     <option key={device.id} value={device.id}>
-                      {device.device_code} ({device.device_type})
+                      {device.device_code} - {device.label}
                     </option>
                   ))}
                 </select>

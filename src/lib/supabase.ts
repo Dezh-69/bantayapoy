@@ -39,6 +39,10 @@ export interface RegistrationRequest {
   reviewed_by: string | null;
   created_at: string;
   reviewed_at: string | null;
+  // Merged from profiles join
+  full_name: string;
+  contact_number: string | null;
+  status: ProfileStatus;
 }
 
 export interface Device {

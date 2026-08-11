@@ -1,8 +1,8 @@
 import React from 'react';
 
 // ─── Base Skeleton Primitive ───
-const Skeleton = ({ className = '' }: { className?: string }) => (
-  <div className={`skeleton-pulse rounded ${className}`} />
+const Skeleton = ({ className = '', ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`skeleton-pulse rounded ${className}`} {...props} />
 );
 
 // ─── Dashboard Skeleton (Admin) ───
