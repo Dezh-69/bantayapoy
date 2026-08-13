@@ -1,9 +1,9 @@
- FireAlert System
+ AgapSense System
 
-Welcome to the FireAlert System! This document serves as a comprehensive guide to the project's architecture, codebase, and features. It is specifically designed to help explain the system during panel presentations and code reviews.
+Welcome to the AgapSense System! This document serves as a comprehensive guide to the project's architecture, codebase, and features. It is specifically designed to help explain the system during panel presentations and code reviews.
 
   Project Overview
-FireAlert is a comprehensive, role-based fire alert and monitoring system designed to bridge the gap between residents, local authorities (BFP - Bureau of Fire Protection), and system administrators. The platform provides real-time monitoring, alert management, and device tracking to ensure swift responses to fire incidents.
+AgapSense is a comprehensive, role-based fire alert and monitoring system designed to bridge the gap between residents, local authorities (BFP - Bureau of Fire Protection), and system administrators. The platform provides real-time monitoring, alert management, and device tracking to ensure swift responses to fire incidents.
 
   Technology Stack
 - Frontend Framework: React 19 with TypeScript
