@@ -197,7 +197,7 @@ export const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({ devicesPath })
   const [loading, setLoading] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Close on outside click
   useEffect(() => {
