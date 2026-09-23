@@ -1,18 +1,29 @@
- AgapSense System
+# AgapSense System
 
-Welcome to the AgapSense System! This document serves as a comprehensive guide to the project's architecture, codebase, and features. It is specifically designed to help explain the system during panel presentations and code reviews.
+Welcome to the AgapSense System! This document serves as a comprehensive guide to the project.
 
-  Project Overview
-AgapSense is a comprehensive, role-based fire alert and monitoring system designed to bridge the gap between residents, local authorities (BFP - Bureau of Fire Protection), and system administrators. The platform provides real-time monitoring, alert management, and device tracking to ensure swift responses to fire incidents.
+## 📖 About the Project (What the System Does)
+AgapSense is a comprehensive, real-time fire alert and monitoring system. It is designed to provide immediate alerts, track hardware sensor device locations via an interactive map, and manage incident responses to ensure swift action during fire emergencies.
 
-  Technology Stack
-- Frontend Framework: React 19 with TypeScript
-- Build Tool: Vite
-- Styling: TailwindCSS v4
-- Routing: React Router v7
-- Mapping & Location: Leaflet & React-Leaflet
-- Icons: Lucide React
-- Backend & Database: Supabase (PostgreSQL, Authentication, Row Level Security)
+## 👥 Who Uses It
+The platform bridges the gap between three main types of users:
+1. **Residents:** Use the system to monitor their home sensors, manage their personal alert settings (SMS/Push), and view localized fire logs.
+2. **BFP (Bureau of Fire Protection) Responders:** Use the system to monitor active alerts, coordinate dispatch teams, and track emergency incidents in real-time.
+3. **System Administrators:** Have full oversight of the platform, including user management, device hardware status, and global system logs.
+
+## 🧑‍💻 My Role
+*Note: Please update this section with your specific role if needed.*
+As a **[Full Stack Developer / Lead Engineer]**, my role involves the end-to-end development of the system, including frontend architecture, backend integration with Supabase, real-time map implementation, and ensuring secure Role-Based Access Control (RBAC).
+
+## 🛠️ Tools and Languages Used
+- **Language:** TypeScript, HTML, CSS
+- **Frontend Framework:** React 19
+- **Build Tool:** Vite
+- **Styling:** TailwindCSS v4
+- **Routing:** React Router v7
+- **Mapping & Location:** Leaflet & React-Leaflet
+- **Icons:** Lucide React
+- **Backend, Database, & Auth:** Supabase (PostgreSQL, Authentication, Row Level Security)
 
 ---
 
